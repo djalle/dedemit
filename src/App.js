@@ -1,25 +1,45 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import { CardList } from './components/card-list/card-list.component.jsx';
+import { SearchBox } from './components/search-box/search-box.component.jsx';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+class App extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      monsters: [],
+      cariDedemit: ''
+    };
+    
+  }
+
+  componentDidMount() {
+    fetch ('https://jsonplaceholder.typicode.com/users')
+    .then(response => response.json())
+    .then(pengguna => this.setState({ monsters: pengguna }))
+  }
+
+  adaKetikan = diketik => {this.setState({ cariDedemit: diketik.target.value })};
+  
+
+  render() {
+    const { monsters, cariDedemit } = this.state; 
+    const dedemitYangdicari = monsters.filter(demit => 
+      demit.name.toLowerCase().includes(cariDedemit.toLowerCase())
+    );
+
+    return (
+      <div className="App">
+        <h1> Dedemit Tak Berkomit </h1>
+        <SearchBox 
+          placeholder='Cari Dedemit'
+          cariSiapa={this.adaKetikan}
+        />
+        <CardList siluman={dedemitYangdicari} />
+      </div>
+    );
+  }
+};
 
 export default App;
